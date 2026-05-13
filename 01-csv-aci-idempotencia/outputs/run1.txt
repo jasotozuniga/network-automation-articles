@@ -1,0 +1,36 @@
+$ ansible-playbook provision_aci.yml
+
+PLAY [Provision EPGs, BDs and Static Bindings in ACI from CSV] *****************
+
+TASK [Read CSV with objects to provision] **************************************
+ok: [localhost]
+
+TASK [Build unique set of Bridge Domains] **************************************
+ok: [localhost]
+
+TASK [Build unique set of EPGs] ************************************************
+ok: [localhost]
+
+TASK [Ensure Bridge Domains exist] *********************************************
+changed: [localhost] => (item=BD-DB-PROD)
+changed: [localhost] => (item=BD-APP-PROD)
+changed: [localhost] => (item=BD-WEB-PROD)
+
+TASK [Ensure BD subnets exist] *************************************************
+changed: [localhost] => (item=10.10.10.1/24)
+changed: [localhost] => (item=10.10.20.1/24)
+changed: [localhost] => (item=10.10.30.1/24)
+
+TASK [Ensure EPGs exist and are bound to their BD] *****************************
+changed: [localhost] => (item=EPG-DB-PROD)
+changed: [localhost] => (item=EPG-APP-PROD)
+changed: [localhost] => (item=EPG-WEB-PROD)
+
+TASK [Ensure Static Bindings exist for each EPG] *******************************
+changed: [localhost] => (item=EPG-DB-PROD -> pod1/leafs 101-102/IPG-vPC-DB-01)
+changed: [localhost] => (item=EPG-APP-PROD -> pod1/leafs 101-102/IPG-vPC-APP-01)
+changed: [localhost] => (item=EPG-WEB-PROD -> pod1/leafs 103/eth1/15)
+changed: [localhost] => (item=EPG-WEB-PROD -> pod1/leafs 104/eth1/15)
+
+PLAY RECAP *********************************************************************
+localhost : ok=7  changed=4  unreachable=0  failed=0  skipped=0

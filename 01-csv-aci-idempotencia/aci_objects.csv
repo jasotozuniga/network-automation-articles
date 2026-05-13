@@ -1,0 +1,5 @@
+tenant,vrf,bd_name,bd_subnet,app_profile,epg_name,encap,pod_id,leafs,interface,interface_type,mode
+PRD-FIN,VRF-PRD,BD-DB-PROD,10.10.10.1/24,AP-DB,EPG-DB-PROD,vlan-100,1,101-102,IPG-vPC-DB-01,vpc,trunk
+PRD-FIN,VRF-PRD,BD-APP-PROD,10.10.20.1/24,AP-APP,EPG-APP-PROD,vlan-101,1,101-102,IPG-vPC-APP-01,vpc,trunk
+PRD-FIN,VRF-PRD,BD-WEB-PROD,10.10.30.1/24,AP-WEB,EPG-WEB-PROD,vlan-102,1,103,eth1/15,switch_port,trunk
+PRD-FIN,VRF-PRD,BD-WEB-PROD,10.10.30.1/24,AP-WEB,EPG-WEB-PROD,vlan-102,1,104,eth1/15,switch_port,trunk

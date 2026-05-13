@@ -1,0 +1,17 @@
+# How the cisco.aci modules achieve idempotency, viewed from the wire.
+
+Ansible task                  APIC
+─────────────                 ──────
+     │
+     │  1. GET /api/mo/<DN-of-object>.json
+     │ ────────────────────────────────────▶
+     │ ◀─── 200 OK { ... current attributes ... }
+     │
+     │  2. Compare expected attrs vs current attrs.
+     │     Any difference?
+     │       │
+     │       ├─ NO  → no POST sent. changed=False. ✅
+     │       │
+     │       └─ YES → POST only the attributes that differ.
+     │              ─────────────────────────────────▶
+     │              ◀── 200 OK. changed=True.

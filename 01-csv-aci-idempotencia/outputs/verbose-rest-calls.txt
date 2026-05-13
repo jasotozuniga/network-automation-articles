@@ -1,0 +1,11 @@
+$ ansible-playbook provision_aci.yml -vv 2>&1 | grep -E "Calling|GET|POST"
+
+# Idempotent run after adding one new binding to the CSV.
+# Notice: only ONE POST (the new binding). Everything else: GET -> diff -> skip.
+
+Calling: GET https://apic.lab/api/mo/uni/tn-PRD-FIN/BD-BD-DB-PROD.json
+Calling: GET https://apic.lab/api/mo/uni/tn-PRD-FIN/BD-BD-APP-PROD.json
+Calling: GET https://apic.lab/api/mo/uni/tn-PRD-FIN/BD-BD-WEB-PROD.json
+Calling: GET https://apic.lab/api/mo/uni/tn-PRD-FIN/ap-AP-DB/epg-EPG-DB-PROD/rspathAtt-[topology/pod-1/protpaths-101-102/pathep-[IPG-vPC-DB-01]].json
+Calling: GET https://apic.lab/api/mo/uni/tn-PRD-FIN/ap-AP-DB/epg-EPG-DB-PROD/rspathAtt-[topology/pod-1/protpaths-105-106/pathep-[IPG-vPC-DB-02]].json
+Calling: POST https://apic.lab/api/mo/uni/tn-PRD-FIN/ap-AP-DB/epg-EPG-DB-PROD/rspathAtt-[topology/pod-1/protpaths-105-106/pathep-[IPG-vPC-DB-02]].json

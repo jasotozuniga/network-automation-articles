@@ -1,0 +1,10 @@
+$ ansible-playbook aci_rest_validation.yml
+
+# Post-deploy verification that the static bindings exist under the EPG.
+
+ok: [localhost] => {
+    "msg": [
+        "topology/pod-1/protpaths-101-102/pathep-[IPG-vPC-DB-01]",
+        "topology/pod-1/protpaths-105-106/pathep-[IPG-vPC-DB-02]"
+    ]
+}

@@ -1,0 +1,20 @@
+---
+# aci_rest_validation.yml
+# Post-deploy validation: confirm that the static bindings are present under the EPG.
+# Idempotent — runs read-only queries.
+#
+# Run as an include in your main playbook, or standalone with vars set.
+
+- name: Confirm static bindings exist under the EPG
+  cisco.aci.aci_rest:
+    host: "{{ lookup('env', 'APIC_HOST') }}"
+    username: "{{ lookup('env', 'APIC_USER') }}"
+    password: "{{ lookup('env', 'APIC_PASS') }}"
+    validate_certs: false
+    path: /api/mo/uni/tn-PRD-FIN/ap-AP-DB/epg-EPG-DB-PROD.json?query-target=children&target-subtree-class=fvRsPathAtt
+    method: get
+  register: binding_check
+
+- name: Show paths bound to the EPG
+  ansible.builtin.debug:
+    msg: "{{ binding_check.imdata | map(attribute='fvRsPathAtt.attributes.tDn') | list }}"

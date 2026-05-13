@@ -1,0 +1,13 @@
+# .pre-commit-config.yaml
+# Gate CSV changes by running --check --diff against the lab before commit.
+# Install pre-commit:  pip install pre-commit && pre-commit install
+# https://pre-commit.com
+
+repos:
+  - repo: local
+    hooks:
+      - id: ansible-check-aci
+        name: Validate idempotency of the ACI playbook
+        entry: ansible-playbook provision_aci.yml --check --diff
+        language: system
+        files: 'aci_objects\.csv$'

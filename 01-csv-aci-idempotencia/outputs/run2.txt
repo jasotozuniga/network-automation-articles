@@ -1,0 +1,27 @@
+$ ansible-playbook provision_aci.yml
+
+# Second run — same CSV, no changes on the fabric
+
+TASK [Ensure Bridge Domains exist] *********************************************
+ok: [localhost] => (item=BD-DB-PROD)
+ok: [localhost] => (item=BD-APP-PROD)
+ok: [localhost] => (item=BD-WEB-PROD)
+
+TASK [Ensure BD subnets exist] *************************************************
+ok: [localhost] => (item=10.10.10.1/24)
+ok: [localhost] => (item=10.10.20.1/24)
+ok: [localhost] => (item=10.10.30.1/24)
+
+TASK [Ensure EPGs exist and are bound to their BD] *****************************
+ok: [localhost] => (item=EPG-DB-PROD)
+ok: [localhost] => (item=EPG-APP-PROD)
+ok: [localhost] => (item=EPG-WEB-PROD)
+
+TASK [Ensure Static Bindings exist for each EPG] *******************************
+ok: [localhost] => (item=EPG-DB-PROD -> pod1/leafs 101-102/IPG-vPC-DB-01)
+ok: [localhost] => (item=EPG-APP-PROD -> pod1/leafs 101-102/IPG-vPC-APP-01)
+ok: [localhost] => (item=EPG-WEB-PROD -> pod1/leafs 103/eth1/15)
+ok: [localhost] => (item=EPG-WEB-PROD -> pod1/leafs 104/eth1/15)
+
+PLAY RECAP *********************************************************************
+localhost : ok=7  changed=0  unreachable=0  failed=0  skipped=0   # idempotent

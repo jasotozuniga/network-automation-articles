@@ -1,0 +1,9 @@
+# APIC audit log: idempotent vs non-idempotent re-runs of the same CSV
+
+# Non-idempotent playbook -- second run on the same CSV
+apic# moquery -c aaaModLR -f 'aaa.ModLR.descr*"fvRsPathAtt"' | grep created -c
+4    # 4 "created/modified" entries in the audit log, even though nothing actually changed
+
+# Idempotent playbook -- second run on the same CSV
+apic# moquery -c aaaModLR -f 'aaa.ModLR.descr*"fvRsPathAtt"' | grep created -c
+0    # zero noise -- the second run doesn't appear in the audit at all

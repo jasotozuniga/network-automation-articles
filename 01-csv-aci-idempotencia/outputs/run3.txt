@@ -1,0 +1,14 @@
+$ ansible-playbook provision_aci.yml
+
+# Third run — one new row added to CSV:
+# PRD-FIN,VRF-PRD,BD-DB-PROD,10.10.10.1/24,AP-DB,EPG-DB-PROD,vlan-100,1,105-106,IPG-vPC-DB-02,vpc,trunk
+
+TASK [Ensure Static Bindings exist for each EPG] *******************************
+ok:      [localhost] => (item=EPG-DB-PROD -> pod1/leafs 101-102/IPG-vPC-DB-01)
+ok:      [localhost] => (item=EPG-APP-PROD -> pod1/leafs 101-102/IPG-vPC-APP-01)
+ok:      [localhost] => (item=EPG-WEB-PROD -> pod1/leafs 103/eth1/15)
+ok:      [localhost] => (item=EPG-WEB-PROD -> pod1/leafs 104/eth1/15)
+changed: [localhost] => (item=EPG-DB-PROD -> pod1/leafs 105-106/IPG-vPC-DB-02)
+
+PLAY RECAP *********************************************************************
+localhost : ok=7  changed=1  unreachable=0  failed=0  skipped=0   # exactly the delta

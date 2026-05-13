@@ -1,0 +1,12 @@
+# Example: declaring a vpc binding but passing only one leaf in `leafs`.
+# The module rejects it with a clear, actionable message -- a raw `requests.post`
+# would swallow this and return 200 OK with a confusing nested error in the JSON.
+
+TASK [Ensure Static Bindings exist for each EPG] *******************************
+failed: [localhost] (item=EPG-DB-PROD -> pod1/leafs 101/IPG-vPC-DB-01) =>
+  msg: |
+    APIC Error 400: invalid configuration
+    For interface_type 'vpc', the 'leafs' list must contain exactly 2 elements,
+    got 1: ['101']
+  changed: false
+  status: -1

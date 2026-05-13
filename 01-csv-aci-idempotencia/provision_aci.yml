@@ -1,0 +1,83 @@
+---
+# provision_aci.yml
+# Idempotent provisioning of EPGs, Bridge Domains, and Static Bindings in Cisco ACI from a CSV.
+#
+# Reads APIC credentials from env vars: APIC_HOST, APIC_USER, APIC_PASS
+# Run:   ansible-playbook provision_aci.yml
+# Dry:   ansible-playbook provision_aci.yml --check --diff
+#
+# https://github.com/<your-handle>/network-automation-articles
+
+- name: Provision EPGs, BDs and Static Bindings in ACI from CSV
+  hosts: localhost
+  gather_facts: false
+
+  module_defaults:
+    group/cisco.aci.aci:
+      host: "{{ lookup('env', 'APIC_HOST') }}"
+      username: "{{ lookup('env', 'APIC_USER') }}"
+      password: "{{ lookup('env', 'APIC_PASS') }}"
+      validate_certs: false
+
+  tasks:
+    - name: Read CSV with objects to provision
+      community.general.read_csv:
+        path: ./aci_objects.csv
+      register: aci_data
+
+    - name: Build unique set of Bridge Domains
+      ansible.builtin.set_fact:
+        unique_bds: "{{ aci_data.list | unique(attribute='bd_name') }}"
+
+    - name: Build unique set of EPGs
+      ansible.builtin.set_fact:
+        unique_epgs: "{{ aci_data.list | unique(attribute='epg_name') }}"
+
+    - name: Ensure Bridge Domains exist
+      cisco.aci.aci_bd:
+        tenant: "{{ item.tenant }}"
+        vrf: "{{ item.vrf }}"
+        bd: "{{ item.bd_name }}"
+        state: present
+      loop: "{{ unique_bds }}"
+      loop_control:
+        label: "{{ item.bd_name }}"
+
+    - name: Ensure BD subnets exist
+      cisco.aci.aci_bd_subnet:
+        tenant: "{{ item.tenant }}"
+        bd: "{{ item.bd_name }}"
+        gateway: "{{ item.bd_subnet.split('/')[0] }}"
+        mask: "{{ item.bd_subnet.split('/')[1] }}"
+        state: present
+      loop: "{{ unique_bds }}"
+      loop_control:
+        label: "{{ item.bd_subnet }}"
+
+    - name: Ensure EPGs exist and are bound to their BD
+      cisco.aci.aci_epg:
+        tenant: "{{ item.tenant }}"
+        ap: "{{ item.app_profile }}"
+        epg: "{{ item.epg_name }}"
+        bd: "{{ item.bd_name }}"
+        state: present
+      loop: "{{ unique_epgs }}"
+      loop_control:
+        label: "{{ item.epg_name }}"
+
+    - name: Ensure Static Bindings exist for each EPG
+      cisco.aci.aci_static_binding_to_epg:
+        tenant: "{{ item.tenant }}"
+        ap: "{{ item.app_profile }}"
+        epg: "{{ item.epg_name }}"
+        encap_id: "{{ item.encap | regex_replace('^vlan-', '') | int }}"
+        deploy_immediacy: immediate
+        interface_mode: "{{ item.mode }}"
+        interface_type: "{{ item.interface_type }}"
+        pod_id: "{{ item.pod_id }}"
+        leafs: "{{ item.leafs.split('-') }}"
+        interface: "{{ item.interface }}"
+        state: present
+      loop: "{{ aci_data.list }}"
+      loop_control:
+        label: "{{ item.epg_name }} -> pod{{ item.pod_id }}/leafs {{ item.leafs }}/{{ item.interface }}"

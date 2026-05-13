@@ -1,0 +1,26 @@
+$ ansible-playbook provision_aci.yml --check --diff
+
+# Previewing the new binding before applying it to the fabric
+
+TASK [Ensure Static Bindings exist for each EPG] *******************************
+ok:      [localhost] => (item=EPG-DB-PROD -> pod1/leafs 101-102/IPG-vPC-DB-01)
+ok:      [localhost] => (item=EPG-APP-PROD -> pod1/leafs 101-102/IPG-vPC-APP-01)
+ok:      [localhost] => (item=EPG-WEB-PROD -> pod1/leafs 103/eth1/15)
+ok:      [localhost] => (item=EPG-WEB-PROD -> pod1/leafs 104/eth1/15)
+--- before
++++ after
+@@ -1 +1,10 @@
++{
++  "fvRsPathAtt": {
++    "attributes": {
++      "encap": "vlan-100",
++      "mode": "regular",
++      "instrImedcy": "immediate",
++      "tDn": "topology/pod-1/protpaths-105-106/pathep-[IPG-vPC-DB-02]"
++    }
++  }
++}
+changed: [localhost] => (item=EPG-DB-PROD -> pod1/leafs 105-106/IPG-vPC-DB-02)
+
+PLAY RECAP *********************************************************************
+localhost : ok=7  changed=1  unreachable=0  failed=0  skipped=0

@@ -1,0 +1,41 @@
+# Ansible
+*.retry
+.vault_pass
+ansible.log
+*.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# Secrets — never commit these
+.env
+.envrc
+vault.yml
+vault_pass.txt
+secrets.yml
+*.key
+*.pem
+credentials*.yml
+
+# Local testing
+*.tmp
+*.bak
+test_local/
+local_outputs/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
