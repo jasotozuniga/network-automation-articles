@@ -28,6 +28,9 @@ credentials*.yml
 test_local/
 local_outputs/
 
+# Outputs of helper scripts — useful locally, not interesting in the repo
+gist_urls.txt
+
 # IDE
 .idea/
 .vscode/
